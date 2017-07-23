@@ -8,8 +8,9 @@ RUN apt-get -qq -y install wget curl
 RUN sudo apt-get -qq -y install software-properties-common
 
 RUN sudo apt-get install -y python-pip python-dev build-essential
-Run pip install --upgrade pip 
-Run pip install numpy 
+RUN pip install --upgrade pip 
+RUN pip install numpy 
+RUN pip install git+https://github.com/sahandha/iso_forest.git
 
 RUN apt-get update
 RUN apt-get install -yq default-jdk
