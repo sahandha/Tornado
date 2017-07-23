@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>iso forest</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+  <h1>Isolation Forest</h1>
+
+
+
+    <h2>Results</h2>
+    <p>Data has been trained. The following are the results:</p>
+    <img src="./plots/scores.png" style="width:304px;height:228px;">
+    <img src="./plots/sorteddata.png" style="width:304px;height:228px;">
+    <img src="./plots/data.png" style="width:304px;height:228px;">
+
+    <h2> enter a data point (x,y) to be scored. </h2>
+    <form action="/score_point" method="GET">
+      Data point: <input type="text" name="SinglePoint"><br>
+      <input type="submit" value="Submit">
+    </form>
+
+</body>
+</html>
