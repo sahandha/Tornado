@@ -34,7 +34,7 @@ class Upload(tornado.web.RequestHandler):
         fh = open(__UPLOADS__ + cname, 'wb')
         fh.write(fileinfo['body'])
         print(__UPLOADS__ + cname)
-        subprocess.call(['./scripts/submitsparkjob.sh', __UPLOADS__ + cname])
+        subprocess.call(['./scripts/submitsparkjob.sh', $ISOFOREST + "/" + __UPLOADS__ + cname])
         #iso.main(fileinfo['body'])
         self.render("./html/results.html")
 
