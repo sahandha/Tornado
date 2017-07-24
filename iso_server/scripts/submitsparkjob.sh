@@ -1,3 +1,3 @@
 #!/bin/bash
 
-spark-submit --master local[*] isoforestcalls.py $1
+$SPARK_HOME/spark-submit --master spark://spark-master:7077 $ISOFOREST/scripts/isoforestcalls.py $1

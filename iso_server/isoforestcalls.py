@@ -1,9 +1,13 @@
+import sys
 import iso_forest as iso
 import seaborn as sb
 import matplotlib.pyplot as plt
 import numpy as np
+
+import findspark
+findspark.init()
+
 from pyspark import SparkContext, SparkConf
-import sys
 
 # Note since we will be using spark-submit to submit the job, we don't need to define conf.
 # conf = SparkConf().setAppName("iso_forest").setMaster("local[*]")

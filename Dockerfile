@@ -23,11 +23,15 @@ RUN wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.2-bin-hadoop2.7.tgz
 RUN tar xvf spark-2.0.2-bin-hadoop2.7.tgz
 RUN rm spark-2.0.2-bin-hadoop2.7.tgz
 RUN mv spark-2.0.2-bin-hadoop2.7 /opt/spark
+RUN pip install findspark
 RUN pip install tornado
 
 EXPOSE 8888
 
 Add iso_server /external/TornadoWebServer
 
+ENV SPARK_HOME=/opt/spark
+ENV PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/build:$PYTHONPATH
+ENV ISOFOREST=/external/TornadoWebServer
 
 CMD ["python", "/external/TornadoWebServer/server.py"]
