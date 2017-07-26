@@ -43,4 +43,3 @@ ENV SPARK_HOME=/opt/spark
 ENV PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/build:$PYTHONPATH
 ENV ISOFOREST=/external/server
 
-RUN apt-get install -y vim
