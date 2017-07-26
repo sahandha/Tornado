@@ -14,7 +14,6 @@ RUN pip install numpy
 RUN pip install  matplotlib
 RUN pip install seaborn
 RUN apt-get install -y python-tk
-RUN pip install git+https://github.com/sahandha/iso_forest.git
 
 RUN apt-get update
 RUN apt-get install -yq default-jdk
@@ -26,12 +25,22 @@ RUN mv spark-2.0.2-bin-hadoop2.7 /opt/spark
 RUN pip install findspark
 RUN pip install tornado
 
+RUN git clone https://github.com/sahandha/iso_forest.git /root/iso_forest 
+RUN pip install /root/iso_forest
+
+#RUN apt-get install -y gzip tar
+#RUN tar -zcvf iso_forest.tar.gzip /root/iso_forest
+
+
+
 EXPOSE 8888
 
-Add iso_server /external/TornadoWebServer
+Add tornado /external/tornado
+Add iso_server /external/server
+Add iso_forest-master.zip /external
 
 ENV SPARK_HOME=/opt/spark
 ENV PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/build:$PYTHONPATH
-ENV ISOFOREST=/external/TornadoWebServer
+ENV ISOFOREST=/external/server
 
-CMD ["python", "/external/TornadoWebServer/server.py"]
+RUN apt-get install -y vim
