@@ -10,12 +10,18 @@ define("port", default=8888, help="run on the given port", type=int)
 
 clients = dict()
 
-__UPLOADS__ = "uploads/"
+__UPLOADS__ = "/external/tornado/uploads/"
 
 class IndexHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
-        self.render("./html/index.html")
+        self.render("/external/server/static/index.html")
+
+class StaticHandler(tornado.web.StaticFileHandler)
+    def set_extra_headers(self, path):
+        self.set_header("Cache-control", "no-cache")
+    def get(self):
+        self.render("/external/server/static/results.html")
 
 class SinglePoint(tornado.web.RequestHandler):
     @tornado.web.asynchronous
@@ -25,7 +31,6 @@ class SinglePoint(tornado.web.RequestHandler):
         self.write(value)
 
 class Upload(tornado.web.RequestHandler):
-    @tornado.web.asynchronous
     def post(self):
         fileinfo = self.request.files['filearg'][0]
         fname = fileinfo['filename']
@@ -33,14 +38,15 @@ class Upload(tornado.web.RequestHandler):
         cname = str(uuid.uuid4()) + extn
         fh = open(__UPLOADS__ + cname, 'wb')
         fh.write(fileinfo['body'])
-        print(__UPLOADS__ + cname)
-        subprocess.call(['./scripts/submitsparkjob.sh', $ISOFOREST + "/" + __UPLOADS__ + cname])
-        #iso.main(fileinfo['body'])
-        self.render("./html/results.html")
+        subprocess.call(['/external/server/scripts/submitsparkjob.sh',  __UPLOADS__ + cname, '/external/iso_forest-master.zip'])
+        sh = StaticHandler()
+        sh.get()
+        #self.render("/external/server/static/results.html")
+        #self.get()
 
 class ImageHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("./html/results.html")
+        self.render("/external/server/static/results.html")
 
 
 app = tornado.web.Application([

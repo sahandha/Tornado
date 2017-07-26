@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use('Agg')
+
 import sys
 import iso_forest as iso
 import seaborn as sb
@@ -16,8 +19,6 @@ sc = SparkContext(appName="Isolation Forest")
 def main(file):
 
     X = np.genfromtxt(file, delimiter=',')
-    print(X)
-    print(len(X))
     data_RDD = sc.parallelize(partition(X,int(len(X)/8)))
     Forest = data_RDD.map(lambda x: iso.iForest(x,ntrees=100, sample_size=256))
     S_t = Forest.map(lambda F: F.compute_paths(X))
@@ -33,7 +34,7 @@ def partition(l,n):
 def getSinglePointScore(pt):
     values = iso.compute_paths_single(pts)
     plt.hist(values,bins=np.linspace(0,1,20),normed=True,alpha=0.5)
-    plt.savefig('./plots/singlepoint_dist.png')
+    plt.savefig('/external/server/images/singlepoint_dist.png')
     print(values)
 
 def FormatData(X):
@@ -53,12 +54,12 @@ def FormatData(X):
 def PlotData(X):
     plt.figure(figsize=(7,7))
     plt.scatter(X[:,0],X[:,1],s=15,facecolor='k',edgecolor='k')
-    plt.savefig('./plots/data.png')
+    plt.savefig('/external/server/images/data.png')
 
 def PlotScores(Scores):
     f, axes = plt.subplots(1, 1, figsize=(7, 7), sharex=True)
     sb.distplot(Scores, kde=True, color="b", ax=axes, axlabel='anomaly score')
-    plt.savefig('./plots/scores.png')
+    plt.savefig('/external/server/images/scores.png')
 
 def PlotSortedData(X,Scores):
     ss=np.argsort(Scores)
@@ -68,11 +69,8 @@ def PlotSortedData(X,Scores):
     plt.scatter(x,y,s=15,c='b',edgecolor='b')
     plt.scatter(x[ss[-10:]],y[ss[-10:]],s=55,c='k')
     plt.scatter(x[ss[:10]],y[ss[:10]],s=55,c='r')
-    plt.savefig('./plots/sorteddata.png')
+    plt.savefig('/external/server/images/sorteddata.png')
 
 if __name__=="__main__":
     file = sys.argv[1]
-    print("++"*50)
-    print(file)
-
     main(file)
