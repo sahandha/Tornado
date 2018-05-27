@@ -7,6 +7,11 @@ import seaborn as sb
 import matplotlib.pyplot as plt
 import numpy as np
 
+try:
+    import cPickle as pickle
+except:
+    import pickle
+
 import findspark
 findspark.init()
 
@@ -70,6 +75,15 @@ def PlotSortedData(X,Scores):
     plt.scatter(x[ss[-10:]],y[ss[-10:]],s=55,c='k')
     plt.scatter(x[ss[:10]],y[ss[:10]],s=55,c='r')
     plt.savefig('/external/server/images/sorteddata.png')
+
+def save_object(obj, filename):
+    with open(filename, 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
+
+def open_object(filename):
+    with open(filename, 'rb') as input:
+        forest = pickle.load(input)
+    return forest
 
 if __name__=="__main__":
     file = sys.argv[1]

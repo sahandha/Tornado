@@ -1,0 +1,10 @@
+.ipynb_checkpoints
+*.pyc
+__pycache__
+derby.log
+metastore_db
+DataProcessing.m
+report/*.log
+report/*.aux
+report/*.gz
+report/*.out

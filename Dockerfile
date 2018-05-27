@@ -35,7 +35,6 @@ RUN pip install /root/iso_forest
 
 EXPOSE 8888
 
-Add tornado /external/tornado
 Add iso_server /external/server
 Add iso_forest-master.zip /external
 
@@ -43,3 +42,4 @@ ENV SPARK_HOME=/opt/spark
 ENV PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/build:$PYTHONPATH
 ENV ISOFOREST=/external/server
 
+RUN apt-get install -y vim
