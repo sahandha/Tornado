@@ -1,6 +1,7 @@
 FROM python:3.5-slim
 
 MAINTAINER Sahand Hariri sahandha@gmail.com
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*
 RUN apt-get -qq update
@@ -15,7 +16,8 @@ RUN pip install  matplotlib
 RUN pip install seaborn
 RUN apt-get install -y python-tk
 
-ENV DEBIAN_FRONTEND noninteractive
+RUN sudo apt-get remove --purge getdeb-repository
+
 RUN apt-get update
 RUN apt-get install -yq default-jdk
 
