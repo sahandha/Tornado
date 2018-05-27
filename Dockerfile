@@ -15,6 +15,7 @@ RUN pip install  matplotlib
 RUN pip install seaborn
 RUN apt-get install -y python-tk
 
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
 RUN apt-get install -yq default-jdk
 
