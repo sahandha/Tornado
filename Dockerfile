@@ -26,6 +26,7 @@ RUN rm spark-2.0.2-bin-hadoop2.7.tgz
 RUN mv spark-2.0.2-bin-hadoop2.7 /opt/spark
 RUN pip install findspark
 RUN pip install tornado
+RUN pip install motor
 
 RUN git clone https://github.com/sahandha/iso_forest.git /root/iso_forest 
 RUN pip install /root/iso_forest
