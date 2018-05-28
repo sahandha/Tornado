@@ -17,9 +17,13 @@ RUN pip install seaborn
 RUN apt-get install -y python-tk
 
 
-RUN apt-get --fix-broken install && apt-get clean && apt-get autoclean && apt-get autoremove && dpkg --configure -a
+RUN apt-get purge oracle-java7-installer
+RUN apt clean
+RUN add-apt-repository --remove ppa:webupd8team/java
 RUN apt-get update
-RUN apt-get install openjdk-7-jdk openjdk-7-jre-headless
+RUN apt-add-repository ppa:webupd8team/java
+RUN apt-get update
+RUN apt-get install -yq oracle-java7-installer
 #RUN apt-get install -yq default-jre
 
 RUN wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.2-bin-hadoop2.7.tgz 
