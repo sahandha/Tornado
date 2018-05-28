@@ -17,7 +17,7 @@ __RESOURCE__ = os.path.join(os.path.dirname(__file__),"resources/")
 __USERS__ = os.path.join(os.path.dirname(__file__),"users/")
 
 
-db = motor.motor_tornado.MotorClient('mongodb', 27017).IsolationForest
+db = motor.motor_tornado.MotorClient().IsolationForest
 
 print(db)
 
