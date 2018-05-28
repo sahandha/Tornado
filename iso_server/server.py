@@ -33,7 +33,7 @@ def CreateUser(username, password,fullname,email):
     'password':password,
     'fullname':fullname,
     'email':email,
-    'projects':[]
+    'projects':['default']
     })
 
     # create appropriate directories for each user
@@ -103,6 +103,7 @@ class LoginHandler(tornado.web.RequestHandler):
 class LogoutHandler(tornado.web.RequestHandler):
     def initialize(self, **configs):
         self.application.settings['current_user'] = 'no_user'
+        self.application.settings['current_project'] = 'default'
         self.current_user = self.application.settings['current_user']
     def get(self):
         self.redirect('/')
