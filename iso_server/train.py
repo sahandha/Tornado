@@ -37,7 +37,6 @@ def save_object(obj, filename):
         pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
 
 if __name__=="__main__":
-    print("im in here")
     datafile = sys.argv[1]
     savepath = sys.argv[2]
     main(datafile, savepath)
