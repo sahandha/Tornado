@@ -16,7 +16,7 @@ RUN pip install  matplotlib
 RUN pip install seaborn
 RUN apt-get install -y python-tk
 
-RUN apt-get install -y default-jre
+RUN apt-get install -y default-jre; exit 0
 
 RUN wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.2-bin-hadoop2.7.tgz
 RUN tar xvf spark-2.0.2-bin-hadoop2.7.tgz
