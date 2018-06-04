@@ -146,6 +146,29 @@ class ProjectLoader(tornado.web.RequestHandler):
     def get(self):
         self.render('TrainedData.html', username=self.current_user, projects=self.projects, current_project=self.current_project,imagespath=__ROOT__+self.imagespath)
 
+class DeleteProject(tornado.web.RequestHandler):
+    def initialize(self, **configs):
+        self.db = self.application.settings['db']
+        current_project = self.application.settings['current_project']
+        self.current_user = self.application.settings['current_user']
+        projects = self.application.settings['projects']
+        print(current_project)
+        print(projects)
+        projects.remove(current_project)
+        self.application.settings['current_project'] = "default"
+        self.application.settings['projects'] = projects
+        Updatedb(self.current_user,"projects",projects)
+
+    def get(self):
+        self.redirect('/')
+
+class NewProject(tornado.web.RequestHandler):
+
+    def get(self):
+        self.application.settings['current_project'] = "default"
+        self.redirect('/')
+
+
 class Upload(tornado.web.RequestHandler):
     def initialize(self, **configs):
         self.db = self.application.settings['db']
@@ -171,7 +194,7 @@ class Upload(tornado.web.RequestHandler):
         subprocess.call([__SCRIPTS__+'submitsparkjob.sh', __RESOURCE__+'iso_forest-master.zip', __ROOT__+'/train.py', uploadspath+"/"+fname, treespath, imagespath])
         self.get()
     def get(self):
-        self.redirect("/projectload")
+        self.redirect("/projectload"+self.current_project)
 
     def CreateProject(self,username,project):
         projectdir = __USERS__+"/"+username+"/"+project
@@ -213,6 +236,8 @@ application = tornado.web.Application([
     (r"/register", RegisterationPage),
     (r"/forgot_password", ForgotPasswordHandler),
     (r"/projectload.*", ProjectLoader),
+    (r"/deleteproject", DeleteProject),
+    (r"/newproject", NewProject),
     (r"/", MainHandler)
 ],**settings)
 
