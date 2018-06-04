@@ -19,8 +19,6 @@ __USERS__ = os.path.join(os.path.dirname(__file__),"users/")
 
 db = motor.motor_tornado.MotorClient().IsolationForest
 
-print(db)
-
 @gen.coroutine
 def Authenticate(username, password):
      userlookup = yield db.users.find({"username":username, "password":password}).to_list(length=1)
@@ -165,7 +163,7 @@ class Upload(tornado.web.RequestHandler):
         fh.write(fileinfo['body'])
         fh.close()
         self.write("Data uploaded successfully")
-        subprocess.call([__SCRIPTS__+'submitsparkjob.sh', __RESOURCE__+'iso_forest-master.zip', __ROOT__+'/train.py', uploadspath+"/"+fname, treespath])
+        subprocess.call([__SCRIPTS__+'submitsparkjob.sh', __RESOURCE__+'iso_forest-master.zip', __ROOT__+'/train.py', uploadspath+"/"+fname, treespath, imagespath])
         self.get()
     def get(self):
         self.redirect('/')
