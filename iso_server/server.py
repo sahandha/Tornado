@@ -166,7 +166,6 @@ class Upload(tornado.web.RequestHandler):
         fh.close()
         self.write("Data uploaded successfully")
         subprocess.call([__SCRIPTS__+'submitsparkjob.sh', __RESOURCE__+'iso_forest-master.zip', __ROOT__+'/train.py', uploadspath+"/"+fname, treespath])
-        #subprocess.call([__SCRIPTS__+'submitsparkjob.sh', __ROOT__+'isoforestcalls.py', cname, __RESOURCE__+'iso_forest-master.zip'])
         self.get()
     def get(self):
         self.redirect('/')

@@ -26,7 +26,7 @@ def main(file, savepath):
     X = np.genfromtxt(file, delimiter=',')
     data_RDD = sc.parallelize(partition(X,int(len(X)/8)))
     Forest = data_RDD.map(lambda x: iso.iForest(x,ntrees=100, sample_size=256))
-    save_object(Forest,savepath+"/trees")
+    save_object(Forest.collect(),savepath+"/trees")
 
 def partition(l,n):
     return [l[i:i+n] for i in range(0,len(l),n)]
