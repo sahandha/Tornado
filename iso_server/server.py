@@ -14,7 +14,7 @@ __SCRIPTS__  = os.path.join(os.path.dirname(__file__),"scripts/")
 __STATIC__   = os.path.join(os.path.dirname(__file__),"static/")
 __TEMPLATE__ = os.path.join(os.path.dirname(__file__),"templates/")
 __RESOURCE__ = os.path.join(os.path.dirname(__file__),"resources/")
-__USERS__ = os.path.join(os.path.dirname(__file__),"users/")
+__USERS__ = os.path.join(os.path.dirname(__file__),"static/users/")
 
 
 db = motor.motor_tornado.MotorClient().IsolationForest
@@ -135,11 +135,16 @@ class ForgotPasswordHandler(tornado.web.RequestHandler):
 
 class ProjectLoader(tornado.web.RequestHandler):
     def initialize(self, **configs):
+        self.db = self.application.settings['db']
         self.current_user = self.application.settings['current_user']
+        self.application.settings['current_project'] = (self.request.uri).lstrip('/projectload')
+        self.current_project = self.application.settings['current_project']
+        self.projects = self.application.settings['projects']
+        imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
+        self.imagespath = imagespath
 
     def get(self):
-        self.application.settings['current_project'] = (self.request.uri).lstrip('/projectload')
-        self.redirect('/')
+        self.render('TrainedData.html', username=self.current_user, projects=self.projects, current_project=self.current_project,imagespath=__ROOT__+self.imagespath)
 
 class Upload(tornado.web.RequestHandler):
     def initialize(self, **configs):
@@ -154,7 +159,7 @@ class Upload(tornado.web.RequestHandler):
         self.CreateProject(self.current_user,project)
         self.current_project = project
         imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
-
+        self.imagespath = imagespath
         fileinfo = self.request.files['filearg'][0]
         fname = fileinfo['filename']
         extn = os.path.splitext(fname)[1]
@@ -162,11 +167,11 @@ class Upload(tornado.web.RequestHandler):
         fh = open(uploadspath+"/"+fname, 'wb')
         fh.write(fileinfo['body'])
         fh.close()
-        self.write("Data uploaded successfully")
+        #self.write("Data uploaded successfully")
         subprocess.call([__SCRIPTS__+'submitsparkjob.sh', __RESOURCE__+'iso_forest-master.zip', __ROOT__+'/train.py', uploadspath+"/"+fname, treespath, imagespath])
         self.get()
     def get(self):
-        self.redirect('/')
+        self.redirect("/projectload")
 
     def CreateProject(self,username,project):
         projectdir = __USERS__+"/"+username+"/"+project
@@ -191,6 +196,7 @@ class Upload(tornado.web.RequestHandler):
 settings=dict(
     template_path=__TEMPLATE__,
     static_path=__STATIC__,
+    users_path=__USERS__,
     current_user='no_user',
     projects=[],
     current_project='default',
