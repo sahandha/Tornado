@@ -144,7 +144,7 @@ class ProjectLoader(tornado.web.RequestHandler):
         self.imagespath = imagespath
 
     def get(self):
-        self.render('TrainedData.html', username=self.current_user, projects=self.projects, current_project=self.current_project,imagespath=__ROOT__+self.imagespath)
+        self.render('TrainedData.html', username=self.current_user, projects=self.projects, current_project=self.current_project,imagespath=self.imagespath)
 
 class DeleteProject(tornado.web.RequestHandler):
     def initialize(self, **configs):
