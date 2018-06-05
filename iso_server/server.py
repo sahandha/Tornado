@@ -137,7 +137,11 @@ class ProjectLoader(tornado.web.RequestHandler):
         self.imagespath = imagespath
 
     def get(self):
-        self.render('TrainedData.html', username=self.current_user, projects=self.projects, current_project=self.current_project,imagespath=self.imagespath)
+        self.render('TrainedData.html',
+                    username=self.current_user,
+                    projects=self.projects,
+                    current_project=self.current_project,
+                    imagespath=self.static_url(self.imagespath.lstrip('/static/')))
 
 class DeleteProject(tornado.web.RequestHandler):
     def initialize(self, **configs):
@@ -171,7 +175,11 @@ class ScorePoint(tornado.web.RequestHandler):
         subprocess.call([__SCRIPTS__+'submitsparkjob_scoring.sh',__RESOURCE__+'iso_forest-master.zip',__ROOT__+'/score.py',datapoint,uploadspath,treespath,imagespath])
         self.get(imagespath)
     def get(self, imagespath):
-        self.render("results.html", username=self.current_user, projects = self.projects,current_project=self.current_project,imagespath=imagespath)
+        self.render("results.html",
+                    username=self.current_user,
+                    projects=self.projects,
+                    current_project=self.current_project,
+                    imagespath=self.static_url(self.imagespath.lstrip('/static/')))
 
 class ScoreData(tornado.web.RequestHandler):
     def post(self):
