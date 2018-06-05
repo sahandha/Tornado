@@ -31,7 +31,7 @@ def CreateUser(username, password,fullname,email):
     'password':password,
     'fullname':fullname,
     'email':email,
-    'projects':['default']
+    'projects':[]
     })
 
     # create appropriate directories for each user
@@ -77,7 +77,11 @@ class MainHandler(tornado.web.RequestHandler):
         if self.current_user == 'no_user':
             self.render('login.html',failmessage="")
         else:
-            self.render('user_landing_page.html', username=self.current_user, projects=self.projects, current_project=self.current_project)
+            self.render('user_landing_page.html',
+                        username=self.current_user,
+                        projects=self.projects,
+                        current_project=self.current_project,
+                        failmessage="")
 
 class LoginHandler(tornado.web.RequestHandler):
     def initialize(self, **configs):
@@ -102,6 +106,7 @@ class LogoutHandler(tornado.web.RequestHandler):
     def initialize(self, **configs):
         self.application.settings['current_user'] = 'no_user'
         self.application.settings['current_project'] = 'default'
+        self.application.settings['projects'] = []
         self.current_user = self.application.settings['current_user']
     def get(self):
         self.redirect('/')
@@ -152,8 +157,6 @@ class DeleteProject(tornado.web.RequestHandler):
         current_project = self.application.settings['current_project']
         self.current_user = self.application.settings['current_user']
         projects = self.application.settings['projects']
-        print(current_project)
-        print(projects)
         projects.remove(current_project)
         self.application.settings['current_project'] = "default"
         self.application.settings['projects'] = projects
@@ -179,6 +182,13 @@ class Upload(tornado.web.RequestHandler):
 
     def post(self):
         project = self.get_argument('projectname')
+        if project in self.projects:
+            self.render('user_landing_page.html',
+                        username=self.current_user,
+                        projects=self.projects,
+                        current_project=self.current_project,
+                        failmessage="Project already exists")
+            return
         self.CreateProject(self.current_user,project)
         self.current_project = project
         imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)

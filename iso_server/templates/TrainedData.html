@@ -54,19 +54,21 @@
       </div>
 		{% end %}
 	  </div>
-    <form enctype="multipart/form-data" action="/deleteproject" method="GET">
-			<div class="btn-group mr-2" role="group" aria-label="Second group">
-				<ul>
-	    		<div><input type="submit" value="Delete Project" class="btn btn-secondary"></input></div>
-				</ul>
-	    </div>
-	  </form>
-    <form enctype="multipart/form-data" action="/newproject" method="GET">
-			<div class="btn-group mr-2" role="group" aria-label="Second group">
-				<ul>
-	    		<div><input type="submit" value="Create New Project" class="btn btn-secondary"></input></div>
-				</ul>
-	    </div>
-	  </form>
-
 {% end block %}
+
+{%block actionButtons%}
+<div class="container">
+  <div class="row">
+	  <div class="col-sm-2">
+		    <form action="/deleteproject" method="GET">
+	        <input type="submit" value="Delete Project" class="btn btn-default"></input>
+	      </form>
+    </div>
+	  <div class="col-sm-2">
+		  <form action="/newproject" method="GET">
+	      <input type="submit" value="Create New Project" class="btn btn-default"></input>
+	    </form>
+    </div>
+  </div>
+</div>
+{%end block%}

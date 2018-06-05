@@ -8,7 +8,7 @@
 {% if len(projects)==0 %}
 <p>You currently have no projects</p>
 {% else %}
-<ul>
+    <ul>
       {% for project in projects %}
         {% block student %}
           <li><a name={{escape(project)}} href="/projectload{{escape(project)}}" method="GET">
@@ -32,6 +32,7 @@
 	    <h2>Isolation Forest</h2>
 		{% if current_project=="default" %}
 			<h3>No project loaded</h3>
+      <p style="color:red;">{{failmessage}}</p>
 	    <p>
 	      Start a new project. Upload a file containing your data in csv format.
 	    </p>
