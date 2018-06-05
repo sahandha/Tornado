@@ -19,7 +19,7 @@ from pyspark import SparkContext, SparkConf
 
 # Note since we will be using spark-submit to submit the job, we don't need to define conf.
 # conf = SparkConf().setAppName("iso_forest").setMaster("local[*]")
-sc = SparkContext(appName="Isolation Forest")
+sc = SparkContext(appName="Isolation Forest Training")
 
 def main(file, savepath, imagepath):
 
@@ -27,6 +27,12 @@ def main(file, savepath, imagepath):
     data_RDD = sc.parallelize(partition(X,int(len(X)/8)))
     Forest = data_RDD.map(lambda x: iso.iForest(x,ntrees=100, sample_size=256))
     save_object(Forest.collect(),savepath+"/trees")
+
+    S_t = Forest.map(lambda F: F.compute_paths(X))
+    Scores  = S_t.reduce(lambda a,b: a+b)/8
+
+    save_object(Scores,savepath+"/scores")
+
     PlotData(X,imagepath)
     PlotScores(Scores,imagepath)
     PlotSortedData(X,Scores,imagepath)

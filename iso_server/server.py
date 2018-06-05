@@ -48,18 +48,6 @@ def getProjects(username):
 def Updatedb(username,field,newvalue):
     result = yield db.users.update_one({ "username":username }, { "$set" : {field:newvalue} })
 
-'''
-@gen.coroutine
-def putPaths(username,project):
-    basepath = __USERS__+username+"/"+project
-    result = yield db.users.update_one({ "username":username },
-    { "$set" :
-        {project:{"imagepath":basepath+"/"+"images",
-                  "treespath":basepath+"/"+"trees",
-                  "uploadspath":basepath+"/"+"uploads"}}
-         })
-'''
-
 def getPaths(username,project):
     basepath = __USERS__+username+"/"+project
     images  = basepath+"/"+"images"
@@ -172,13 +160,28 @@ class NewProject(tornado.web.RequestHandler):
         self.redirect('/')
 
 class ScorePoint(tornado.web.RequestHandler):
+    def initialize(self, **configs):
+        self.db = self.application.settings['db']
+        self.current_user = self.application.settings['current_user']
+        self.current_project = self.application.settings['current_project']
+        self.projects = self.application.settings['projects']
     def post(self):
-        datapointstring = self.get_argument('datapoint')
-        datapoint = [float(x) for x in datapointstring.strip('()').split(',')]
-        self.redirect('/')
+        datapoint = self.get_argument('datapoint')
+        imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
+        subprocess.call([__SCRIPTS__+'submitsparkjob_scoring.sh',__RESOURCE__+'iso_forest-master.zip',__ROOT__+'/score.py',datapoint,uploadspath,treespath,imagespath])
+        self.get(imagespath)
+    def get(self, imagespath):
+        self.render("results.html", username=self.current_user, projects = self.projects,current_project=self.current_project,imagespath=imagespath)
 
 class ScoreData(tornado.web.RequestHandler):
     def post(self):
+        fileinfo = self.request.files['filearg'][0]
+        fname = fileinfo['filename']
+        extn = os.path.splitext(fname)[1]
+        #cname = str(uuid.uuid4()) + extn #this is to scramble the name of the file
+        fh = open(uploadspath+"/"+fname, 'wb')
+        fh.write(fileinfo['body'])
+        fh.close()
         self.redirect('/')
 
 class Upload(tornado.web.RequestHandler):
@@ -259,6 +262,7 @@ application = tornado.web.Application([
     (r"/newproject", NewProject),
     (r"/scorepoint", ScorePoint),
     (r"/scoredata", ScoreData),
+    (r"/projectload(.*)",tornado.web.StaticFileHandler, {"path": "./static"}),
     (r"/", MainHandler)
 ],**settings)
 
