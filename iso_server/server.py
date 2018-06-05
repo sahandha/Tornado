@@ -171,6 +171,15 @@ class NewProject(tornado.web.RequestHandler):
         self.application.settings['current_project'] = "default"
         self.redirect('/')
 
+class ScorePoint(tornado.web.RequestHandler):
+    def post(self):
+        datapointstring = self.get_argument('datapoint')
+        datapoint = [float(x) for x in datapointstring.strip('()').split(',')]
+        self.redirect('/')
+
+class ScoreData(tornado.web.RequestHandler):
+    def post(self):
+        self.redirect('/')
 
 class Upload(tornado.web.RequestHandler):
     def initialize(self, **configs):
@@ -248,6 +257,8 @@ application = tornado.web.Application([
     (r"/projectload.*", ProjectLoader),
     (r"/deleteproject", DeleteProject),
     (r"/newproject", NewProject),
+    (r"/scorepoint", ScorePoint),
+    (r"/scoredata", ScoreData),
     (r"/", MainHandler)
 ],**settings)
 

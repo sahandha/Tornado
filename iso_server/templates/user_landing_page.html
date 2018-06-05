@@ -28,14 +28,13 @@
 {% end block %}
 
 {% block content %}
-	  <div class="well">
-	    <h2 class="text-muted">Start a new project</h2>
-		{% if current_project=="default" %}
-			<h4 class="text-muted">Pick a name for your project and upload your training data</h4>
-      <p style="color:red;">{{failmessage}}</p>
+<div class="well">
+	<h2 class="text-muted">Start a new project</h2>
+	 <h4 class="text-muted">Pick a name for your project and upload your training data</h4>
+    <p style="color:red;">{{failmessage}}</p>
 
   <div class="container">
-    <form class="form-inline" action="/getfile" method="POST">
+    <form class="form-inline" enctype="multipart/form-data" action="/getfile" method="POST">
       <div class="form-group">
         <input type="text" name="projectname" placeholder="project name" class="btn btn-default"></input>
         <input type="file" name="filearg" value="Choose file" class="btn btn-default"></input>
@@ -44,8 +43,5 @@
     </form>
   </div>
 
-		{% else %}
-			<h3>Project {{escape(current_project)}} is loaded</h3>
-		{% end %}
-	  </div>
+</div>
 {% end block %}
