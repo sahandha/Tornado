@@ -33,14 +33,17 @@
 		{% if current_project=="default" %}
 			<h4 class="text-muted">Pick a name for your project and upload your training data</h4>
       <p style="color:red;">{{failmessage}}</p>
-	  <form class="form-inline" action="/getfile" method="POST">
-			<div class="form-group">
-          <label class="sr-only">Datapoint:</label>
-					<div> <input type="text" name="projectname" placeholder="project name" class="btn btn-default"></input></div>
-	    		<div> <input type="file" name="filearg" value="Choose file" class="btn btn-default"></input>
-							  <input type="submit" value="Submit" class="btn btn-default"></input></div>
-	    </div>
-	  </form>
+
+  <div class="container">
+    <form class="form-inline" action="/getfile" method="POST">
+      <div class="form-group">
+        <input type="text" name="projectname" placeholder="project name" class="btn btn-default"></input>
+        <input type="file" name="filearg" value="Choose file" class="btn btn-default"></input>
+        <input type="submit" value="Submit" class="btn btn-default"></input>
+      </div>
+    </form>
+  </div>
+
 		{% else %}
 			<h3>Project {{escape(current_project)}} is loaded</h3>
 		{% end %}
