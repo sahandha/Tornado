@@ -50,7 +50,7 @@ def Updatedb(username,field,newvalue):
 
 def getPaths(username,project):
     basepath = __USERS__+username+"/"+project
-    images  = basepath+"/"+"images"
+    images  = "users/"+username+"/"+project+"/images"
     trees   = basepath+"/"+"trees"
     uploads = basepath+"/"+"uploads"
     return(images, trees, uploads)
@@ -141,7 +141,7 @@ class ProjectLoader(tornado.web.RequestHandler):
                     username=self.current_user,
                     projects=self.projects,
                     current_project=self.current_project,
-                    imagespath=self.static_url(self.imagespath.lstrip('/static/')))
+                    imagespath=self.static_url(self.imagespath))
 
 class DeleteProject(tornado.web.RequestHandler):
     def initialize(self, **configs):
@@ -172,14 +172,20 @@ class ScorePoint(tornado.web.RequestHandler):
     def post(self):
         datapoint = self.get_argument('datapoint')
         imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
-        subprocess.call([__SCRIPTS__+'submitsparkjob_scoring.sh',__RESOURCE__+'iso_forest-master.zip',__ROOT__+'/score.py',datapoint,uploadspath,treespath,imagespath])
+        subprocess.call([__SCRIPTS__+'submitsparkjob_scoring.sh',
+                         __RESOURCE__+'iso_forest-master.zip',
+                         __ROOT__+'/score.py',
+                         datapoint,
+                         uploadspath,
+                         treespath,
+                         self.static_url(imagespath)])
         self.get(imagespath)
     def get(self, imagespath):
         self.render("results.html",
                     username=self.current_user,
                     projects=self.projects,
                     current_project=self.current_project,
-                    imagespath=self.static_url(self.imagespath.lstrip('/static/')))
+                    imagespath=self.static_url(self.imagespath))
 
 class ScoreData(tornado.web.RequestHandler):
     def post(self):
@@ -221,7 +227,12 @@ class Upload(tornado.web.RequestHandler):
         fh.write(fileinfo['body'])
         fh.close()
         #self.write("Data uploaded successfully")
-        subprocess.call([__SCRIPTS__+'submitsparkjob.sh', __RESOURCE__+'iso_forest-master.zip', __ROOT__+'/train.py', uploadspath+"/"+fname, treespath, imagespath])
+        subprocess.call([__SCRIPTS__+'submitsparkjob.sh',
+                         __RESOURCE__+'iso_forest-master.zip',
+                         __ROOT__+'/train.py',
+                         uploadspath+"/"+fname,
+                         treespath,
+                         self.static_url(imagespath)])
         self.get()
     def get(self):
         self.redirect("/projectload"+self.current_project)
