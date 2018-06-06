@@ -50,10 +50,11 @@ def Updatedb(username,field,newvalue):
 
 def getPaths(username,project):
     basepath = __USERS__+username+"/"+project
-    images  = "users/"+username+"/"+project+"/images"
+    staticimages  = "users/"+username+"/"+project+"/images"
+    images  = basepath+"/"+"images"
     trees   = basepath+"/"+"trees"
     uploads = basepath+"/"+"uploads"
-    return(images, trees, uploads)
+    return(staticimages, images, trees, uploads)
 
 class MainHandler(tornado.web.RequestHandler):
     def initialize(self):
@@ -133,15 +134,16 @@ class ProjectLoader(tornado.web.RequestHandler):
         self.application.settings['current_project'] = (self.request.uri).lstrip('/projectload')
         self.current_project = self.application.settings['current_project']
         self.projects = self.application.settings['projects']
-        imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
-        self.imagespath = imagespath
+        staticimages, imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
+        self.imagespath = images
+        self.staticimages = staticimages
 
     def get(self):
         self.render('TrainedData.html',
                     username=self.current_user,
                     projects=self.projects,
                     current_project=self.current_project,
-                    imagespath=self.static_url(self.imagespath))
+                    imagespath=self.static_url(self.staticimages))
 
 class DeleteProject(tornado.web.RequestHandler):
     def initialize(self, **configs):
@@ -169,23 +171,25 @@ class ScorePoint(tornado.web.RequestHandler):
         self.current_user = self.application.settings['current_user']
         self.current_project = self.application.settings['current_project']
         self.projects = self.application.settings['projects']
+        staticimages, imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
+        self.staticimages = staticimages
+        self.imagespath = imagespath
     def post(self):
         datapoint = self.get_argument('datapoint')
-        imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
         subprocess.call([__SCRIPTS__+'submitsparkjob_scoring.sh',
                          __RESOURCE__+'iso_forest-master.zip',
                          __ROOT__+'/score.py',
                          datapoint,
                          uploadspath,
                          treespath,
-                         self.static_url(imagespath)])
-        self.get(imagespath)
-    def get(self, imagespath):
+                         self.imagespath])
+        self.get()
+    def get(self):
         self.render("results.html",
                     username=self.current_user,
                     projects=self.projects,
                     current_project=self.current_project,
-                    imagespath=self.static_url(self.imagespath))
+                    imagespath=self.static_url(self.staticimages))
 
 class ScoreData(tornado.web.RequestHandler):
     def post(self):
@@ -217,8 +221,9 @@ class Upload(tornado.web.RequestHandler):
             return
         self.CreateProject(self.current_user,project)
         self.current_project = project
-        imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
+        staticimages, imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
         self.imagespath = imagespath
+        self.staticimages = staticimages
         fileinfo = self.request.files['filearg'][0]
         fname = fileinfo['filename']
         extn = os.path.splitext(fname)[1]
@@ -232,7 +237,7 @@ class Upload(tornado.web.RequestHandler):
                          __ROOT__+'/train.py',
                          uploadspath+"/"+fname,
                          treespath,
-                         self.static_url(imagespath)])
+                         self.imagespath])
         self.get()
     def get(self):
         self.redirect("/projectload"+self.current_project)
