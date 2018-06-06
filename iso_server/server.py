@@ -135,7 +135,7 @@ class ProjectLoader(tornado.web.RequestHandler):
         self.current_project = self.application.settings['current_project']
         self.projects = self.application.settings['projects']
         staticimages, imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
-        self.imagespath = images
+        self.imagespath = imagespath
         self.staticimages = staticimages
 
     def get(self):
