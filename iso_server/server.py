@@ -2,6 +2,7 @@ import tornado.ioloop
 import tornado.web
 import subprocess
 import os
+from shutil import rmtree
 import motor.motor_tornado
 from tornado import gen
 
@@ -38,6 +39,11 @@ def CreateUser(username, password,fullname,email):
     userdir = __USERS__+"/"+username
     if not os.path.exists(userdir):
         os.makedirs(userdir)
+
+def DeleteProjectFolder(username, project):
+    dir = __USERS__+"/"+username+"/"+project
+    if os.path.exists(dir):
+        rmtree(dir)
 
 @gen.coroutine
 def getProjects(username):
@@ -155,6 +161,7 @@ class DeleteProject(tornado.web.RequestHandler):
         self.application.settings['current_project'] = "default"
         self.application.settings['projects'] = projects
         Updatedb(self.current_user,"projects",projects)
+        DeleteProjectFolder(self.current_user,current_project)
 
     def get(self):
         self.redirect('/')
@@ -164,6 +171,7 @@ class NewProject(tornado.web.RequestHandler):
     def get(self):
         self.application.settings['current_project'] = "default"
         self.redirect('/')
+
 
 class ScorePoint(tornado.web.RequestHandler):
     def initialize(self, **configs):

@@ -54,5 +54,4 @@ if __name__=="__main__":
     datafile  = sys.argv[2]
     savepath  = sys.argv[3]
     imagepath = sys.argv[4]
-    print("Im running the core.py file and my data are",X, datafile, savepath, imagepath)
     main(X, datafile, savepath, imagepath)
