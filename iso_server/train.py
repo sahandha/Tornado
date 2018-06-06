@@ -62,12 +62,12 @@ def FormatData(X):
 
 def PlotData(X,imagepath):
     plt.figure(figsize=(7,7))
-    plt.scatter(X[:,0],X[:,1],s=40,c=[.4,.4,.4])
+    plt.scatter(X[:,0],X[:,1],s=40,c=[.4,.4,.4],alpha=0.5)
     plt.savefig(imagepath+'/data.png')
 
 def PlotScores(Scores,imagepath):
     f, axes = plt.subplots(1, 1, figsize=(7, 7), sharex=True)
-    sb.distplot(Scores, kde=True, color="b", ax=axes, axlabel='anomaly score')
+    sb.distplot(Scores, kde=True, color=[0.4,0.4,0.4], ax=axes, axlabel='anomaly score')
     plt.savefig(imagepath+'/scores.png')
 
 def PlotSortedData(X,Scores,imagepath):
@@ -75,7 +75,7 @@ def PlotSortedData(X,Scores,imagepath):
     x = X[:,0]
     y = X[:,1]
     plt.figure(figsize=(7,7))
-    plt.scatter(x,y,s=40,c=[.4,.4,.4])
+    plt.scatter(x,y,s=40,c=[.4,.4,.4],alpha=0.5)
     plt.scatter(x[ss[-10:]],y[ss[-10:]],s=70,c='k')
     plt.scatter(x[ss[:10]],y[ss[:10]],s=70,c='r')
     plt.savefig(imagepath+'/sorteddata.png')

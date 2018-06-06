@@ -28,16 +28,26 @@
 {% end block %}
 
 {% block content %}
-	  <div class="well">
-	    <h2 class="text-muted">Working Project:</h2>
-			<h3 class="text-muted">{{escape(current_project)}}</h3>
-      <p class="text-muted">Data has been trained. The following are the results:</p>
-      <div id="home" class="tab-pane fade in active">
-      <img src="{{imagespath}}/data.png" style="width:200px;height:160px;" alt="Oops">
-      <img src="{{imagespath}}/scores.png" style="width:200px;height:160px;" alt="Oops">
-      <img src="{{imagespath}}/sorteddata.png" style="width:200px;height:160px;" alt="Oops">
-      </div>
-	  </div>
+<div class="well">
+    <h2 class="text-muted">Working Project:</h2>
+    <h3 class="text-muted">{{escape(current_project)}}</h3>
+    <p class="text-muted">Data has been trained. The following are the results:</p>
+    <div class="row">
+        <div class="col-lg-6">
+        <div class="image">
+            <img src="{{imagespath}}/data.png" style="width:100%" alt="Oops">
+            <div class="text-muted">Distribution of Points</div>
+        </div>
+        </div>
+
+        <div class="col-lg-6">
+        <div class="image">
+            <img src="{{imagespath}}/scores.png" style="width:100%" alt="Oops">
+            <div class="text-muted">Distribution of Scores</div>
+        </div>
+        </div>
+    </div>
+</div>
 {% end block %}
 
 

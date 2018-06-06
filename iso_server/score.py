@@ -29,7 +29,7 @@ def main(X, datafile, savepath, imagepath):
 
     S_t = data_RDD.map(lambda F: F.compute_paths([X]))
     S   = S_t.reduce(lambda a,b: a+b)/n
-    scores = oad_object(savepath+'/scores')
+    scores = load_object(savepath+'/scores')
 
     PlotData(X,imagepath,datafile)
     PlotScores(S,imagepath,scores)
@@ -54,13 +54,13 @@ def FormatData(X):
 def PlotData(X,imagepath,datapath):
     TrainingData = np.genfromtxt(datapath+"/data.csv", delimiter=',')
     plt.figure(figsize=(7,7))
-    plt.scatter(TrainingData[:,0],TrainingData[:,1],s=40,c=[.4,.4,.4])
+    plt.scatter(TrainingData[:,0],TrainingData[:,1],s=40,c=[.4,.4,.4],alpha=0.5)
     plt.scatter(X[0],X[1],s=100,c='r')
     plt.savefig(imagepath+'/data_point.png')
 
 def PlotScores(S,imagepath,scores):
     f, axes = plt.subplots(1, 1, figsize=(7, 7), sharex=True)
-    sb.distplot(scores, kde=True, color="b", ax=axes, axlabel='anomaly score')
+    sb.distplot(scores, kde=True, color=[0.4,0.4,0.4], ax=axes, axlabel='anomaly score')
     plt.axvline(x=S[0],color='r',linewidth=5)
     plt.savefig(imagepath+'/scores_point.png')
 

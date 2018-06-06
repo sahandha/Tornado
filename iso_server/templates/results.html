@@ -28,23 +28,49 @@
 {% end block %}
 
 {% block content %}
-	  <div class="well">
-	    <h2 class="text-muted">Working Project:</h2>
-			<h3 class="text-muted">{{escape(current_project)}}</h3>
-      <p class="text-muted">Data has been trained. The following are the results:</p>
-      <div id="home" class="tab-pane fade in active">
-      <img src="{{imagespath}}/data.png" style="width:200px;height:160px;" alt="Oops">
-      <img src="{{imagespath}}/scores.png" style="width:200px;height:160px;" alt="Oops">
-      <img src="{{imagespath}}/sorteddata.png" style="width:200px;height:160px;" alt="Oops">
-      </div>
-	  </div>
+<div class="well">
+    <h2 class="text-muted">Working Project:</h2>
+    <h3 class="text-muted">{{escape(current_project)}}</h3>
+    <p class="text-muted">Data has been trained. The following are the results:</p>
+    <div class="row">
+        <div class="col-lg-6">
+        <div class="image">
+            <img src="{{imagespath}}/data.png" style="width:100%" alt="Oops">
+            <div class="text-muted">Distribution of Points</div>
+        </div>
+        </div>
+
+        <div class="col-lg-6">
+        <div class="image">
+            <img src="{{imagespath}}/scores.png" style="width:100%" alt="Oops">
+            <div class="text-muted">Distribution of Scores</div>
+        </div>
+        </div>
+    </div>
+</div>
 {% end block %}
 
 
 {%block scorePoint%}
 <div class="well">
-<img src="{{imagespath}}/data_point.png" style="width:50%;" alt="Oops">
-<img src="{{imagespath}}/scores_point.png" style="width:50%;" alt="Oops">
+    <h2 class="text-muted">Working Project:</h2>
+    <h3 class="text-muted">{{escape(current_project)}}</h3>
+    <p class="text-muted">Here is a summary of where your point falls in the trained dataset:</p>
+    <div class="row">
+        <div class="col-lg-6">
+        <div class="image">
+            <img src="{{imagespath}}/data_point.png" style="width:100%" alt="Oops">
+            <div class="text-muted">Distribution of Points</div>
+        </div>
+        </div>
+
+        <div class="col-lg-6">
+        <div class="image">
+            <img src="{{imagespath}}/scores_point.png" style="width:100%" alt="Oops">
+            <div class="text-muted">Distribution of Scores</div>
+        </div>
+        </div>
+    </div>
 </div>
 {%end block%}
 
