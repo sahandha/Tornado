@@ -171,10 +171,10 @@ class ScorePoint(tornado.web.RequestHandler):
         self.current_user = self.application.settings['current_user']
         self.current_project = self.application.settings['current_project']
         self.projects = self.application.settings['projects']
+    def post(self):
         staticimages, imagespath, treespath, uploadspath = getPaths(self.current_user, self.current_project)
         self.staticimages = staticimages
         self.imagespath = imagespath
-    def post(self):
         datapoint = self.get_argument('datapoint')
         subprocess.call([__SCRIPTS__+'submitsparkjob_scoring.sh',
                          __RESOURCE__+'iso_forest-master.zip',
