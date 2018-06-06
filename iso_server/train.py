@@ -62,7 +62,7 @@ def FormatData(X):
 
 def PlotData(X,imagepath):
     plt.figure(figsize=(7,7))
-    plt.scatter(X[:,0],X[:,1],s=15,facecolor='k',edgecolor='k')
+    plt.scatter(X[:,0],X[:,1],s=40,c=[.4,.4,.4])
     plt.savefig(imagepath+'/data.png')
 
 def PlotScores(Scores,imagepath):
@@ -75,9 +75,9 @@ def PlotSortedData(X,Scores,imagepath):
     x = X[:,0]
     y = X[:,1]
     plt.figure(figsize=(7,7))
-    plt.scatter(x,y,s=15,c='b',edgecolor='b')
-    plt.scatter(x[ss[-10:]],y[ss[-10:]],s=55,c='k')
-    plt.scatter(x[ss[:10]],y[ss[:10]],s=55,c='r')
+    plt.scatter(x,y,s=40,c=[.4,.4,.4])
+    plt.scatter(x[ss[-10:]],y[ss[-10:]],s=70,c='k')
+    plt.scatter(x[ss[:10]],y[ss[:10]],s=70,c='r')
     plt.savefig(imagepath+'/sorteddata.png')
 
 if __name__=="__main__":

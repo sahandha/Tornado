@@ -234,16 +234,14 @@ class Upload(tornado.web.RequestHandler):
         self.staticimages = staticimages
         fileinfo = self.request.files['filearg'][0]
         fname = fileinfo['filename']
-        extn = os.path.splitext(fname)[1]
-        #cname = str(uuid.uuid4()) + extn #this is to scramble the name of the file
-        fh = open(uploadspath+"/"+fname, 'wb')
+        cname = 'data.csv'
+        fh = open(uploadspath+"/"+cname, 'wb')
         fh.write(fileinfo['body'])
         fh.close()
-        #self.write("Data uploaded successfully")
         subprocess.call([__SCRIPTS__+'submitsparkjob.sh',
                          __RESOURCE__+'iso_forest-master.zip',
                          __ROOT__+'/train.py',
-                         uploadspath+"/"+fname,
+                         uploadspath+"/"+cname,
                          treespath,
                          self.imagespath])
         self.get()

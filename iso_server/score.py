@@ -21,15 +21,18 @@ from pyspark import SparkContext, SparkConf
 # conf = SparkConf().setAppName("iso_forest").setMaster("local[*]")
 sc = SparkContext(appName="Isolation Forest Score")
 
-def main(X, file, savepath, imagepath):
+def main(X, datafile, savepath, imagepath):
     n = 8
     X = FormatData(X)
-    traineddata = load_object(file)
-    data_RDD = sparkify_data(traineddata,n)
+    traineddata = load_object(savepath+'/trees')
+    data_RDD    = sparkify_data(traineddata,n)
 
     S_t = data_RDD.map(lambda F: F.compute_paths([X]))
     S   = S_t.reduce(lambda a,b: a+b)/n
+    scores = oad_object(savepath+'/scores')
 
+    PlotData(X,imagepath,datafile)
+    PlotScores(S,imagepath,scores)
     print("Successfully score and the score is:", S)
 
 def partition(l,n):
@@ -37,17 +40,29 @@ def partition(l,n):
 
 
 def load_object(filename):
-    with open(filename, 'wb') as output:  # Overwrites any existing file.
-        trees = pickle.load(output, pickle.HIGHEST_PROTOCOL)
-
+    with open(filename, 'rb') as output:
+        trees = pickle.load(output)
+    return trees
 def sparkify_data(list, n):
-    pl = partition(list,n)
-    rdd = sc.parallelize(pl)
+    rdd = sc.parallelize(list)
     return rdd
 
 def FormatData(X):
     datapoint = [float(x) for x in X.strip('()').split(',')]
     return datapoint
+
+def PlotData(X,imagepath,datapath):
+    TrainingData = np.genfromtxt(datapath+"/data.csv", delimiter=',')
+    plt.figure(figsize=(7,7))
+    plt.scatter(TrainingData[:,0],TrainingData[:,1],s=40,c=[.4,.4,.4])
+    plt.scatter(X[0],X[1],s=100,c='r')
+    plt.savefig(imagepath+'/data_point.png')
+
+def PlotScores(S,imagepath,scores):
+    f, axes = plt.subplots(1, 1, figsize=(7, 7), sharex=True)
+    sb.distplot(scores, kde=True, color="b", ax=axes, axlabel='anomaly score')
+    plt.axvline(x=S[0],color='r',linewidth=5)
+    plt.savefig(imagepath+'/scores_point.png')
 
 if __name__=="__main__":
     X         = sys.argv[1]
